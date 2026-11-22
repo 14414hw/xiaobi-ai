@@ -1,0 +1,11 @@
+{
+  "pages": {
+    "index": "pages/chat/chat.vue",
+    "settings": "pages/settings/settings.vue",
+    "keyboard": "pages/keyboard/keyboard.vue",
+    "gallery": "pages/gallery/gallery.vue",
+    "mols": "pages/mols/mols.vue",
+    "history": "pages/history/history.vue",
+    "stars": "pages/stars/stars.vue"
+  }
+}

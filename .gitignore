@@ -1,0 +1,10 @@
+node_modules/
+.falcon_/
+.falcon_tmp/
+dist/
+*.amr
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+*.log

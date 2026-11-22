@@ -1,0 +1,21 @@
+{
+  "name": "PenAI",
+  "appid": "8001123456789110",
+  "version": "1.0.2",
+  "description": "为有道词典笔打造的 AI 助手",
+  "icon": "app_icon.png",
+  "quickjs": {
+    "version": "20200705",
+    "bigNum": false
+  },
+  "single-js-bundle": false,
+  "scripts": {
+    "build": "node node_modules/aiot-vue-cli/src/cli.js build -c -q -p"
+  },
+  "dependencies": {
+    "falcon-ui": "^2.0.2"
+  },
+  "devDependencies": {
+    "aiot-vue-cli": "1.0.32"
+  }
+}
