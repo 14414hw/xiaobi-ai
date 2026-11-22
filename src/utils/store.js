@@ -2,9 +2,9 @@
 import fs from 'fs'
 
 // 发行版开关：唯一在源码里出现的一处。tools/make_release.mjs 构建发行包时
-// 把它替换成 true，产出一个与调试版并存安装的独立应用（不同 appid、
+// 把它替换成 true，产出独立应用配置（不同 appid、
 // 不同存储目录、无诊断后门、公式/化学提示词强制锁定）。
-// 调试版（本工程直构）永远是 false，行为与历史版本一致。
+// 该开关为 false 时保持通用行为。
 export var RELEASE = true
 
 var CONF_KEY = 'penai_conf_v1'
@@ -16,14 +16,14 @@ export var SESSION_DIR = RELEASE ? '/userdisk/penair' : '/userdisk/penai'
 // 以前界面里写死 'v1.9.18'，版本升到 1.9.20 后界面还显示旧号，
 // 核对线上到底是哪一版时会直接误判，所以不再允许硬编码。
 // tools/tests/version_test.mjs 会比对 package.json，防止再次漂移。
-// 发行版走独立版本线（1.0.0 起），与调试版的 1.x.x 互不干扰。
+// 发行版走独立版本线（1.0.0 起）。
 // 发行分支由 tools/make_release.mjs 按 RELEASE_VERSION 自动改写，不要在此手工维护。
 export var APP_VERSION = RELEASE ? '1.0.2' : '1.11.3'
 
 // ---- 提示词分段 ----
 // 发行版要求「公式、化学结构式的输出规范强制内置、用户改不掉」：
 // 把默认提示词拆成四段，CORE（公式 + 化学）在任何情况下都参与合成，
-// 用户在设置页写的只是「补充要求」。调试版行为不变（用户改整段）。
+// 用户在设置页写的只是「补充要求」。
 var P_ROLE = '你是一位耐心的高中老师，面向高三学生解答问题，默认用简体中文回答。'
 
 // 核心规范：与客户端的渲染管线一一对应——
@@ -36,12 +36,12 @@ var P_FORMAT = '回答要求：不要用表格。解题类问题按以下格式�
 
 var P_EFFORT = '尽最大努力解答用户的问题，不要用「我无法回答」来回避可以解答的内容。'
 
-// 调试版的默认整段提示词（历史行为：用户可在设置页整段编辑）
+// 通用配置的默认整段提示词
 var FULL_PROMPT = P_ROLE + '\n\n' + CORE_PROMPT + '\n\n' + P_FORMAT + '\n\n' + P_EFFORT
 
 /**
  * 合成实际发送的系统提示词。
- * 调试版：用户写了就用用户的，没写用默认整段（历史行为不变）。
+ * 通用模式：用户写了就用用户的，没写用默认整段。
  * 发行版：角色 + CORE 规范 + 格式 + 补充（用户写的），CORE 永远在，
  *         用户的补充以「教师补充要求」段落在最后（权重最高）。
  * settings.vue 与 chat.vue 的发送点都必须经过它，不许直接读 conf.systemPrompt。
@@ -55,7 +55,7 @@ export function composePrompt(user) {
 
 export var DEFAULTS = {
   // 发行版不预填任何接口地址（含书生网址）：全部由用户手工自填，避免
-  // 「开箱即连我们家端点」的合规问题。调试版保留默认值方便开发。
+  // 避免预设任何服务端点。
   baseUrl: RELEASE ? '' : 'https://discovery-api.intern-ai.org.cn/v1',
   apiKey: '',
   keys: {
@@ -69,7 +69,7 @@ export var DEFAULTS = {
   maxTokens: 0,
   thinkingMode: false,
   showThink: true,
-  // 调试版默认整段提示词；发行版里 systemPrompt 只承载「补充要求」，默认为空
+  // 发行版里 systemPrompt 只承载「补充要求」，默认为空
   systemPrompt: RELEASE ? '' : FULL_PROMPT,
   historyRounds: 6,
   webSearch: true,

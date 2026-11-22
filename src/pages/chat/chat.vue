@@ -2220,8 +2220,8 @@ export default {
 
       // 做题模式：只讲思路不给答案；点「看答案」时 forceAnswer 置真，放行完整解答
       // 提示词模板末尾的「答案」段要先摘掉，否则模型会照着模板把答案写出来（实测会漏）
-      // 发送必须走 composePrompt：发行版在这合成锁定的公式/化学规范，调试版在这
-      // 落默认整段提示词。直接读 conf.systemPrompt 会绕过发行版的核心约束。
+      // 发送必须走 composePrompt：在这里合成锁定的公式与化学规范。
+      // 直接读 conf.systemPrompt 会绕过核心约束。
       var sys = composePrompt(this.conf.systemPrompt || '')
       var studyNow = this.conf.studyMode === true && !this.forceAnswer
       if (studyNow) {
