@@ -1,7 +1,7 @@
-// 纯发行版仓库静态断言（单副本，不含内部调试版）
+// 发行版仓库静态断言
 //
 // 用法：node tools/tests/release_test.mjs
-// 守住四条边界：发行身份、无内置密钥、提示词锁定、无诊断后门。
+// 守住四条边界：发行身份、无内置密钥、提示词锁定、诊断入口短路。
 
 import fs from 'fs'
 import path from 'path'
@@ -72,12 +72,12 @@ for (const [key, rel] of Object.entries(appJson.pages)) {
   ok(fs.existsSync(path.join(ROOT, 'src', rel)), '页面 ' + key + ' 源文件存在：' + rel)
 }
 ok(!fs.existsSync(path.join(ROOT, 'libs')), '仓库不含任何原生模块目录')
-const cloudPat = new RegExp([
+const extraPat = new RegExp([
   'cloud' + 'game', 'cg' + 'media', 'kms' + 'sink', 'mpp' + 'videodec',
   '800112' + '3456789130', 'cg\\.' + 'vid', 'cg\\.' + 'pcm',
   'plane' + 'peek', 'cg' + 'ctl'
 ].join('|'), 'i')
-ok(!all.some(p => cloudPat.test(fs.readFileSync(p, 'utf8'))), '源码不含云游戏模块标识')
+ok(!all.some(p => extraPat.test(fs.readFileSync(p, 'utf8'))), '源码不含额外模块标识')
 
 console.log(fail === 0 ? 'OK  release_test 全部通过' : 'FAIL ' + fail + ' 项')
 process.exit(fail === 0 ? 0 : 1)

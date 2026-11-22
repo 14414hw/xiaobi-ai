@@ -6,9 +6,9 @@
 检查项：
   1. manifest.json 的 cert 条目与 zip 内文件一一对应（名字/大小/md5）
   2. app.js / index.js / 每个注册页面 / 图标都在包内
-  3. 不含任何原生模块（云游戏实验用的播放组件不属于小笔AI）
+  3. 不含任何原生模块
   4. 不含调试页面与危险路径
-任何一项失败即退出码 1，用于 make_release.mjs 构建后硬门禁。
+任何一项失败即退出码 1，用于 build.mjs 构建后硬门禁。
 """
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ def main() -> int:
         ok(man.get("icon", "app_icon.png") in names, "图标存在：" + str(man.get("icon")))
 
         print("== manifest 一致性 ==")
-        # 图标由 manifest.icon 单独声明，构建工具不把它写进 cert（调试版同样如此）
+        # 图标由 manifest.icon 单独声明，构建工具不把它写进 cert
         signed = [n for n in names if n != man.get("icon", "app_icon.png")]
         ok(set(signed) == set(cert.keys()),
            "cert 与包内文件一一对应（多 %d / 少 %d）"
@@ -71,7 +71,7 @@ def main() -> int:
         else:
             ok(False, "找不到 src/app.json，无法核对页面清单")
 
-        print("== 项目边界 ==")
+        print("== 依赖洁净度 ==")
         native = [n for n in names if n.lower().endswith(".so") or n.startswith("libs/")]
         ok(not native, "不含任何原生模块（发现：%s）" % ", ".join(native))
         ok(not any(n in ("gstprobe.js.bin", "probe.js.bin", "scanprobe.js.bin") for n in names),
