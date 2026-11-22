@@ -66,7 +66,7 @@ function b64uri(txt) {
   return 'data:image/jpeg;base64,' + s
 }
 
-// IMG_20261108_010104_470_1_<设备序列号>.JPG -> 2026-11-08 01:01
+// IMG_20261108_010104_470_1_XXXX.JPG -> 2026-11-08 01:01
 function prettyName(n) {
   var m = String(n).match(/^IMG_(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})/)
   if (!m) return String(n).slice(0, 20)
